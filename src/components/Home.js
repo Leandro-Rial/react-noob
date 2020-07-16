@@ -1,45 +1,59 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import Pokeball from '../pokeball.png';
-import { connect } from 'react-redux'
+import React, { useState, useEffect } from 'react';
+import PokemonList from './PokemonList';
+import Pagination from './Pagination'
+import axios from 'axios'
 
-class Home extends Component {
+function Home() {
 
-    render(){
-        console.log(this.props)
-        
-        const { posts } = this.props;
-        const postList = posts.length ? (
-            posts.map(post => {
-                return (
-                    <div className="post card" key={post.id}>
-                        <img src={Pokeball} alt="A pokeball"/>
-                        <div className="card-content">
-                            <Link to={'/' + post.id}>
-                                <span className="card-title">{post.title}</span>
-                            </Link>
-                            <p>{post.body}</p>
-                        </div>
-                    </div>
-                )
+        const [pokemon, setPokemon] = useState([])
+        const [currentPageUrl, setCurrentPageUrl] = useState('https://pokeapi.co/api/v2/pokemon')
+        const [nextPageUrl, setNextPageUrl] = useState()
+        const [prevPageUrl, setPrevPageUrl] = useState()
+        const [loading, setLoading] = useState(true)
+
+        useEffect(() => {
+            setLoading(true)
+            let cancel
+            axios.get(currentPageUrl, {
+                cancelToken: new axios.CancelToken(c => cancel = c)
+            }).then(res => {
+                setLoading(false)
+                setNextPageUrl(res.data.next)
+                setPrevPageUrl(res.data.previous)
+                setPokemon(res.data.results.map(poke => poke.name))
             })
-        ) : (
-            <div className="center">No post yet</div>
+
+            return () => cancel()
+        
+        }, [currentPageUrl])
+
+        function gotoNextPage(){
+            setCurrentPageUrl(nextPageUrl)
+        }
+
+        function gotoPrevPage(){
+            setCurrentPageUrl(prevPageUrl)
+        }
+
+        if (loading) return (
+            <div className="container">
+                <div className="center">
+                    <h1>Loading...</h1>
+                </div>
+            </div>
         )
 
         return (
             <div className="container home">
-                <h4 className="center">Home</h4>
-                { postList }
+                <div className="paginacionInicio">
+                    <Pagination 
+                        gotoNextPage={nextPageUrl ? gotoNextPage : null}
+                        gotoPrevPage={prevPageUrl ? gotoPrevPage : null}
+                    />
+                </div>
+                <PokemonList pokemon={pokemon} />
             </div>
         )
-    }   
 }
 
-const mapStateToProps = (state) => {
-    return {
-        posts: state.posts
-    }
-}
-
-export default connect(mapStateToProps)(Home)
+export default Home

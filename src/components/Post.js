@@ -1,49 +1,44 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { deletePost } from '../actions/postAction'
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 class Post extends Component {
 
-    handleClick = () => {
-        this.props.deletePost(this.props.post.id);
-        this.props.history.push('/');
+    state = {
+        pokeball: null
+    }
+
+    componentDidMount(){
+        console.log(this.props);
+        let id = this.props.match.params.post_id;
+        axios.get('https://pokeapi.co/api/v2/pokemon/' + id).then(res => {
+            this.setState({
+                pokeball: res.data
+            })
+        })
     }
 
     render() {
-        console.log(this.props)
-        const post = this.props.post ? (
+
+        const pokeball = this.state.pokeball ? (
             <div className="post">
-                <h4 className="center">{this.props.post.title}</h4>
-                <p>{this.props.post.body}</p>
-                <div className="center">
-                    <button className="btn grey" onClick={this.handleClick}>
-                        Delete Post
-                    </button>
-                </div>
+                <h4 className="tituloPoke center">{this.state.pokeball.name}</h4>
             </div>
         ) : (
-            <div className="center">Loading post...</div>
+            <div className="center">Loading Pokemon...</div>
         )
-
+        
         return (
-            <div className="container">
-                { post }
+            <div className="container post">
+                <Link to="/">
+                    <button className="botonPokemon">Go to Home</button>
+                </Link>
+                <div className="container post center">
+                    { pokeball }
+                </div>
             </div>
         )
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    let id = ownProps.match.params.post_id;
-    return {
-        post: state.posts.find(post => post.id === id)
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        deletePost: (id) => { dispatch(deletePost(id)) }
-    }    
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Post)
+export default Post
