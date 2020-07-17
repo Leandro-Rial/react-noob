@@ -1,0 +1,77 @@
+p {
+    margin: 0;
+}
+
+.Card {
+    background: white;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.Card:hover {
+    transform: scale(1.05);
+    -webkit-box-shadow: 0px 0px 25px 0px rgba(184,182,184,1);
+    -moz-box-shadow: 0px 0px 25px 0px rgba(184,182,184,1);
+    box-shadow: 0px 0px 25px 0px rgba(184,182,184,1);
+}
+
+.Card__img {
+    text-align: center;
+}
+
+.Card__img img {
+    width: 150px;
+}
+
+.Card__types {
+    display: flex;
+    justify-content: center;    
+}
+
+.Card__type {
+    padding: 5px 10px;
+    margin: 10px 10px 10px 0;
+    border-radius: 5px;
+    background: cyan;
+    color: #fff;
+}
+
+.Card__name {
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Righteous', cursive;
+    font-size: 1.5rem;
+}
+
+.Card__info {
+    margin: 10px 0 10px 10px;
+    text-align: center;
+}
+
+.Card__data {
+    padding-bottom: 10px;
+}
+
+.Card__info .Card__data__Card__data--weight .title {
+    color: #17b952;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 5px 0;
+}
+
+.Card__info .Card__data__Card__data--height .title {
+    color: #b78ee2;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 5px 0;
+}
+
+.Card__info .Card__data__Card__data--ability .title {
+    color: red;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 5px 0;
+}
